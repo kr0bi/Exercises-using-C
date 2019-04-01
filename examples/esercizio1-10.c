@@ -26,7 +26,7 @@ int main(){
     printf("%s & %c => %s\n", str3, c, strchar(str3, c));
     */
     //printf("%s && %s => %s\n", "ciaosonoDaniele", "sono", strstr("ciaosonoDaniele", "sono"));
-    printf("%s && %s => %s\n", "ciaosonoDaniele", "sono", strstring("ciaosonoDaniele", "sono"));
+    printf("%s && %s => %s\n", "ciaosonoDaniele", "Dan", strstring("ciaosonoDaniele", "Dan"));
 
 }
 
