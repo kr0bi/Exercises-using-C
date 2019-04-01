@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 struct node{
     int data;
@@ -44,6 +45,12 @@ struct node *append (struct node *head1, struct node *head2){
     return head1;
 }
 
+struct node *add (struct node *head, int data){
+    struct node *datoDaAggiungere = create(data);
+    struct node *combined = append(head, datoDaAggiungere);
+    return combined;
+}
+
 void destroy (struct node *head){
     struct node *next = head;
     while (next){
@@ -51,4 +58,21 @@ void destroy (struct node *head){
         next = n->next;
         free(n);
     }
+}
+
+void viewNode (struct node *head){
+    for (struct node *n = head; n; n = n->next){
+        printf("%d ", n->data);
+    }
+    printf("\n");
+}
+
+int main (){
+    struct node *theNodo = create(10);
+    theNodo = add(theNodo, 5);
+    theNodo = add(theNodo, 3);
+    printf("length: %d\nl'elemento %d e' presente:%p\nl'ultimo e' %p\n",
+    length(theNodo), 10, find(theNodo, 10), last(theNodo));
+    viewNode(theNodo);
+    return 0;
 }
