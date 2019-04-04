@@ -1,28 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct node{
+struct list{
     int data;
-    struct node *next;
+    struct list *next;
 };
 
-struct node *create(int data){
-    struct node *ptr = malloc(sizeof(struct node));
+struct list *create(int data){
+    struct list *ptr = malloc(sizeof(struct list));
     ptr->data = data;
     ptr->next = NULL;
     return ptr;
 }
 
-int length (struct node *head){
+int length (struct list *head){
     int len = 0;
-    for (struct node *n = head; n; n = n->next){
+    for (struct list *n = head; n; n = n->next){
         ++len;
     }
     return len;
 }
 
-struct node *find (struct node *head, int data){
-    for (struct node *n = head; n; n = n->next){
+struct list *find (struct list *head, int data){
+    for (struct list *n = head; n; n = n->next){
         if (n->data == data){
             return n;
         }
@@ -30,8 +30,8 @@ struct node *find (struct node *head, int data){
     return NULL;
 }
 
-struct node *last (struct node *head){
-    for (struct node *n = head; n; n = n->next){
+struct list *last (struct list *head){
+    for (struct list *n = head; n; n = n->next){
         if (n->next == NULL){
             return n;
         }
@@ -39,42 +39,42 @@ struct node *last (struct node *head){
     return NULL;
 }
 
-struct node *append (struct node *head1, struct node *head2){
-    struct node *last1 = last (head1);
+struct list *append (struct list *head1, struct list *head2){
+    struct list *last1 = last (head1);
     last1->next = head2;
     return head1;
 }
 
-struct node *add (struct node *head, int data){
-    struct node *datoDaAggiungere = create(data);
-    struct node *combined = append(head, datoDaAggiungere);
+struct list *add (struct list *head, int data){
+    struct list *datoDaAggiungere = create(data);
+    struct list *combined = append(head, datoDaAggiungere);
     return combined;
 }
 
-void destroy (struct node *head){
-    struct node *next = head;
+void destroy (struct list *head){
+    struct list *next = head;
     while (next){
-        struct node *n = next;
+        struct list *n = next;
         next = n->next;
         free(n);
     }
 }
 
-void viewNode (struct node *head){
-    for (struct node *n = head; n; n = n->next){
+void viewlist (struct list *head){
+    for (struct list *n = head; n; n = n->next){
         printf("%d ", n->data);
     }
     printf("\n");
 }
 
 int main (){
-    struct node *theNodo = create(10);
+    struct list *theNodo = create(10);
     theNodo = add(theNodo, 5);
     theNodo = add(theNodo, 3);
     printf("length: %d\nl'elemento %d e' presente:%p\nl'ultimo e' %p\n",
     length(theNodo), 10, find(theNodo, 10), last(theNodo));
-    viewNode(theNodo);
+    viewlist(theNodo);
     destroy(theNodo);
-    viewNode(theNodo);
+    viewlist(theNodo);
     return 0;
 }
