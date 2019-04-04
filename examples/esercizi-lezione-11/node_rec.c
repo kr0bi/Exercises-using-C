@@ -12,31 +12,41 @@ struct node *create(int data){
     ptr->next = NULL;
     return ptr;
 }
-
+/*
+    la length ricorsivamente e' definita da navigare sempre
+    fino a quando il prossimo non e' null
+*/
 int length (struct node *head){
     int len = 0;
-    for (struct node *n = head; n; n = n->next){
-        ++len;
+    if (head->next!=NULL){
+        return 1+length(head->next);
+    } else {
+        return 1;
     }
-    return len;
 }
 
 struct node *find (struct node *head, int data){
-    for (struct node *n = head; n; n = n->next){
-        if (n->data == data){
-            return n;
+    if (head->next==NULL){
+        if (head->data==data){
+            return head;
+        } else {
+            return NULL;
+        }
+    } else {
+        if (head->data==data){
+            return head;
+        } else {
+            return find(head->next, data);
         }
     }
-    return NULL;
 }
 
 struct node *last (struct node *head){
-    for (struct node *n = head; n; n = n->next){
-        if (n->next == NULL){
-            return n;
-        }
+    if (head->next==NULL){
+        return head;
+    } else {
+        return last(head->next);
     }
-    return NULL;
 }
 
 struct node *append (struct node *head1, struct node *head2){
@@ -51,12 +61,20 @@ struct node *add (struct node *head, int data){
     return combined;
 }
 
+/*
+    salvo il puntatore successivo
+    elimino il puntatore corrente
+    ricorsivo sul puntatore successivo
+    finche' il puntatore successivo e' null
+*/
+
 void destroy (struct node *head){
-    struct node *next = head;
-    while (next){
-        struct node *n = next;
-        next = n->next;
-        free(n);
+    if (head!=NULL){
+        struct node *n = head->next;
+        free(head);
+        return destroy(n);
+    } else {
+        free(head);
     }
 }
 
