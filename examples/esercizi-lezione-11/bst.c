@@ -39,8 +39,6 @@ void inorder_tree_walk (struct node *x){
     printf("\n");
 }
 
-
-
 /*
     ricerca di una chiave k su un albero x
 */
@@ -153,7 +151,9 @@ void tree_delete (struct node *T, struct node *z){
         y->left->parent = y;
     }
 }
-
+/*
+    test del bst
+*/
 int main(){
     struct node *tree = newNode(5);
     inorder_tree_walk(tree);
