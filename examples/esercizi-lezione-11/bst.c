@@ -152,6 +152,17 @@ void tree_delete (struct node *T, struct node *z){
     }
 }
 /*
+    rimuovere dalla memoria l'intero albero
+*/
+void destroy (struct node *T){
+    if (T!=NULL){
+        destroy(T->left);
+        destroy(T->right);
+        free(T);
+    }
+}
+
+/*
     test del bst
 */
 int main(){
@@ -164,6 +175,10 @@ int main(){
     tree_insert(tree, newNode(6));
     inorder_tree_walk(tree);
     tree_delete(tree, tree_search(tree, 2));
+    inorder_tree_walk(tree);
+    
+    
+    destroy(tree);
     inorder_tree_walk(tree);
     return 0;
 }
