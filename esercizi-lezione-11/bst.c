@@ -203,6 +203,8 @@ struct list *last (struct list *head){
 }
 
 struct list *append (struct list *head1, struct list *head2){
+    if(head1 == NULL)
+        return head2;
     struct list *last1 = last (head1);
     last1->next = head2;
     return head1;
@@ -214,7 +216,7 @@ struct list *add (struct list *head, int data){
     return combined;
 }
 
-void destroy (struct list *head){
+void destroyList (struct list *head){
     struct list *next = head;
     while (next){
         struct list *n = next;
@@ -224,33 +226,30 @@ void destroy (struct list *head){
 }
 
 void viewlist (struct list *head){
-    for (struct list *n = head; n; n = n->next){
-        printf("%d ", n->data);
-    }
+    if(head == NULL) {
     printf("\n");
+    return;
+  }
+  printf("%d ", head->data);
+  viewlist(head->next);
 }
 
 //FINE INTRODUZIONE
 
 /*
     funzione che dato un bst ritorna una lista concatenata
-
-struct list *to_list(struct node *T){
-    struct list *ptr = NULL;
-    if (T!=NULL){
-        to_list_rec(x->left, ptr->next);
-        create()
-        inorder_tree_walk_rec(x->right);
-    }
-}
-
-struct list *to_list_rec(struct node *T, struct list *lst){
-    
-}
-
 */
 
 
+struct list *to_list(struct node *T){
+    if (T==NULL){
+        return NULL;
+    }
+    struct list *left_list = to_list(T->left);
+    struct list *right_list = to_list(T->right);
+    return
+        append (left_list, append(create(T->key), right_list));
+}
 
 /*
     test del bst
@@ -267,7 +266,8 @@ int main(){
     tree_delete(tree, tree_search(tree, 2));
     inorder_tree_walk(tree);
     
-    
+    viewlist(to_list(tree));
+
     destroy(tree);
     inorder_tree_walk(tree);
     return 0;
