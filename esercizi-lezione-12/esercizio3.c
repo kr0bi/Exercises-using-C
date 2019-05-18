@@ -31,7 +31,7 @@ int main(int argc, char **argv){
         strcpy(nomi_dei_file + n, argv[i]);
         FILE *file = fopen(nomi_dei_file + n, "r");
         if (!file){
-            fprintf(stderr, "Errore nell'apertura del file!\n");
+            fprintf(stderr, "Errore nell'apertura in uno dei file!\n");
         return 2;
         }
         //inizialmente puo' essere lunga 10, ma poi devo allungarla man
