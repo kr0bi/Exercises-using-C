@@ -1,21 +1,20 @@
 {
-  "version": "2.0.0",
-  "tasks": [
-      {
-          "label": "execute current program",
-          "type": "shell",
-          "command": "g++",
-          "args": [
-            "-g",
-            "-lm",
-            "${file}",
-            "-o",
-            "${fileDirname}/${fileBasenameNoExtension}"
-          ],
-          "group": {
-              "kind": "build",
-              "isDefault": true
-          }
-      }
-  ]
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "gcc.exe build active file",
+            "command": "C:\\MinGW\\bin\\gcc.exe",
+            "args": [
+                "-g",
+                "-lm",
+                "${file}",
+                "-o",
+                "${fileDirname}\\meme.exe"
+            ],
+            "options": {
+                "cwd": "C:\\MinGW\\bin"
+            }
+        }
+    ],
+    "version": "2.0.0"
 }
