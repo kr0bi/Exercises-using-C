@@ -13,25 +13,22 @@ int main(int argc, char **argv){
     //calcolo la length del primo file
     char *nomePrimoFile = argv[1];
     
-    
-    char *nomi_dei_file = malloc(strlen(nomePrimoFile)*sizeof(char));
+    //non ho idea se quel +1 e' necessario
+    char *nomi_dei_file = (char *)malloc((strlen(nomePrimoFile)+1)*sizeof(char));
     //mi sono dimenticato di impostare i nomi dei file
-
-
 
     //ora devo aprire uno per uno ogni file, copiare il suo contenuto
     //all'interno di una stringa
     //e ricordarmi di spostarmi alla fine della stringa per aggiungerci
     //il file successivo
-    int n = 0, i = 1;
+    int n = 0, i =1;
+    int contatore=0;
     //devo allocare dinamicamente lo spazio per la stringa
-    char *testo = malloc(10*sizeof(char));
-    printf("%s", "bel meme");
-
-    while (n!=argc){
-        nomi_dei_file = realloc(nomi_dei_file, strlen(argv[i+n])*sizeof(char));
-        nomi_dei_file = argv[i+n];
-
+    char *testo = (char *)malloc(10*sizeof(char));
+    //inizialmente gli do 10 cosi' a caso
+    while (i!=argc){    
+        nomi_dei_file = (char *)realloc(nomi_dei_file, (strlen(argv[i])+1024)*sizeof(char));
+        strcpy(nomi_dei_file + n, argv[i]);
         FILE *file = fopen(nomi_dei_file + n, "r");
         if (!file){
             fprintf(stderr, "Errore nell'apertura del file!\n");
@@ -39,18 +36,22 @@ int main(int argc, char **argv){
         }
         //inizialmente puo' essere lunga 10, ma poi devo allungarla man
         //mano che leggo l'input
+        //printf("%s\n", "sono qui");
         while(!feof(file)){
             //ora devo copiare tutto il contenuto all'interno di una
-            //stringa
-            testo = testo + fgetc(file); //non ho idea se sta cosa funziona
-            testo = realloc(testo, 1+sizeof(char));
+            //stringas
+            testo[contatore] = fgetc(file);
+            testo = (char *)realloc(testo, (strlen(testo)+1)*sizeof(char));
+            ++contatore;
         }
         //ricordarsi di chiudere sempre il file aperto
         fclose(file);
         n++;
+        i++;
     }    
     free(nomi_dei_file);
     //stampare l'output
+    testo[contatore] = 0;
     printf("%s", testo);
     free(testo);
     return 0;

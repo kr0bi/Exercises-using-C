@@ -1,29 +1,21 @@
 {
-  "windows": {
-    "options": {
-      "shell": {
-        "executable": "c:\\windows\\sysnative\\bash.exe",
-        "args": ["-c"]
-      }
-    }
-  },
+  "version": "2.0.0",
   "tasks": [
-    {
-      "type": "shell",
-      "label": "clang build active file",
-      "command": "clang",
-      "args": [
-        "-g",
-        "-lm",
-        "${file}",
-        "-o",
-        "${fileDirname}/${fileBasenameNoExtension}"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-    }
-  ],
-  "version": "2.0.0"
+      {
+          "label": "execute current program",
+          "type": "shell",
+          "command": "g++",
+          "args": [
+            "-g",
+            "-lm",
+            "${file}",
+            "-o",
+            "${fileDirname}/${fileBasenameNoExtension}"
+          ],
+          "group": {
+              "kind": "build",
+              "isDefault": true
+          }
+      }
+  ]
 }
