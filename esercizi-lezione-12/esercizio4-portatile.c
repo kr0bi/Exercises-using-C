@@ -36,7 +36,7 @@ int main (int argc, char **argv){
     }
     //devo momentaneamente allocare la dimensione della prima riga
     //quindi leggere finche' non arrivo alla fine riga o a un EOF
-    int size = 2;
+    int size = 1024;
     char *testo1 = malloc(size*sizeof(char));
     
     //momentaneamente alloco la dimensione per il testo 2
@@ -44,7 +44,7 @@ int main (int argc, char **argv){
     
     //inizio effettivo programma
     //inizializzo il numero riga
-    int numberOfRowRead = 0;
+    int numberOfRowRead = 1;
     while (!feof(file1) && !feof(file2)){
         //non posso sapere a priori la lunghezza, quindi alloco un buffer statico 
         //in caso di errore, lo raddoppio
@@ -54,16 +54,20 @@ int main (int argc, char **argv){
         //il carattere prima del terminatore e' un \n
         //lezione 11 buffer statico
         fgets(testo2, size, file2);
+        if (testo1[strlen(testo1)-1]!='\n' || testo2[strlen(testo2)-1]!='\n'){
+            size = size*2;
+        }
         if (strcmp(testo1, testo2)!=0){
             break;
         }
         ++numberOfRowRead;
     }
+    //inserisco il carattere di terminazione
     testo1[strlen(testo1)]=0;
     testo2[strlen(testo2)]=0;
     fclose(file1);
     fclose(file2);
-    fprintf(stdout, "Il numero di riga differente e' la numero: %d\nLe due righe che differiscono:\n%s\n%s", numberOfRowRead, testo1, testo2);
+    fprintf(stdout, "Le due righe che differiscono:\n\t%s\n\t%s", testo1, testo2);
     free(testo1);
     free(testo2);
     
