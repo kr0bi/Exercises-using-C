@@ -14,6 +14,7 @@ int main(int argc, char **argv){
     char *nomePrimoFile = argv[1];
     
     //non ho idea se quel +1 e' necessario
+    // il +1 e' necessario per il carattere di terminazione
     char *nomi_dei_file = (char *)malloc((strlen(nomePrimoFile)+1)*sizeof(char));
     //mi sono dimenticato di impostare i nomi dei file
 
