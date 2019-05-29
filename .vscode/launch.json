@@ -5,25 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "gcc.exe build and debug active file",
+            "name": "clang build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${fileDirname}\\meme.exe",
-            "args": [], 
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "gcc.exe build active file"
+            "MIMode": "lldb",
+            "preLaunchTask": "clang build active file"
         }
     ]
 }
