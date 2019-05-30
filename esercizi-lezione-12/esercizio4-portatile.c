@@ -56,6 +56,8 @@ int main (int argc, char **argv){
         fgets(testo2, size, file2);
         if (testo1[strlen(testo1)-1]!='\n' || testo2[strlen(testo2)-1]!='\n'){
             size = size*2;
+            realloc(testo1, size);
+            realloc(testo2, size);
         }
         if (strcmp(testo1, testo2)!=0){
             break;
