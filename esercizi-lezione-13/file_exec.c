@@ -29,6 +29,22 @@ void viewArrayOfPointers(char **a){
         printf("Value of argvcmd: %s\n", *test);
     }
 }
+int checkIfThereAreAnyAt(char **a){
+    for (char **test = a; *test; ++test){
+        //printf("Sei al controllo:\n\t%s\n", *test);
+        if (strcmp(*test, "@")==0){
+            //printf("\tIF\n");
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void modifyArgvcmd(char **argvcmd, char *daConcatenare){
+    //devo navigare fino al puntatore nullo
+    realloc(*argvcmd, (strlen(*argvcmd)+strlen(daConcatenare))*sizeof(char));
+    strcat(argvcmd[0], daConcatenare);
+}
 
 int main (int argc, char **argv){
     if (argc < 2) {
@@ -46,8 +62,15 @@ int main (int argc, char **argv){
 
     //devo salvare di nuovo il comando + i suoi argomenti
     char **argvcmd = argv + 2;
-    //viewArrayOfPointers(argvcmd);
-    
+    viewArrayOfPointers(argvcmd);
+    //checkIfThereAreAny@
+    if (checkIfThereAreAnyAt(argvcmd)){
+        modifyArgvcmd(argvcmd, " ciao");
+        //printf("YES \n");
+    }
+    printf("Dopo aver modificato:\n");
+    viewArrayOfPointers(argvcmd);
+
     //devo leggere il file riga per riga
     //apro il file
     FILE *file = fopen(nomeFile, "r");
@@ -55,20 +78,21 @@ int main (int argc, char **argv){
         fprintf(stderr, "Errore nell'apertura in uno dei file!\n");
         return 2;
     }
+
+    fprintf(stdout, "-------\n");
     //meglio usare fgetc e copiare char per char
     //fin quando non si arriva a '\n' 
     char *testo = malloc(2*sizeof(char));
     //char **contenutoRighe = malloc(2*sizeof(char));
     //int numeroRighe = 0; //+1 logicamente
+    FILE *fileInterno;
     for (int i = 0; !feof(file); ++i){
         testo[i] = fgetc(file);
         testo = (char *)realloc(testo, (i+1+1)*sizeof(char));
         if (testo[i]=='\n'){
             //strcpy(contenutoRighe[numeroRighe], testo);
             fprintf(stdout, "stringa corrente: %s\n", testo);
-            //++numeroRighe;
-            //contenutoRighe = realloc(contenutoRighe, (numeroRighe+1)*sizeof(char));
-            //contenutoRighe[numeroRighe+1] = realloc (contenutoRighe, (numeroRighe+1)*sizeof(char)); 
+            
             i=-1;
         }
     }
