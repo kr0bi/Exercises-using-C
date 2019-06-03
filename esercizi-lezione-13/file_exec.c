@@ -39,13 +39,44 @@ int checkIfThereAreAnyAt(char **a){
     }
     return 0;
 }
-
-void modifyArgvcmd(char **argvcmd, char *daConcatenare){
-    //devo navigare fino al puntatore nullo
-    realloc(*argvcmd, (strlen(*argvcmd)+strlen(daConcatenare))*sizeof(char));
-    strcat(argvcmd[0], daConcatenare);
+//PRESUPPONE CHE CI SIA LA @ NELLA MATRICE
+int positionAt(char **a){
+    int i=0;
+    for (char **test = a; *test; ++test){
+        if (strcmp(*test, "@")==0){
+            return i;
+        }
+        i++;
+    }
+    return -1;
 }
 
+int countHowManyRows (char **ptr){
+    int c = 0;
+    for (char **i = ptr; *i; ++i){
+        ++c;
+    }
+    return c;
+}
+
+//caso in cui devo sostituire @ con il testo
+void modifyArgvcmd(char **argvcmd, char *daConcatenare){
+    //void *ptr = (char)argvcmd[1][0];
+    //printf("%s\n", argvcmd[1]);
+    strcpy(argvcmd[positionAt(argvcmd)], daConcatenare);
+    
+}
+//caso in cui devo aggiungere una riga alla matrice
+void addArgvcmd(char **argvcmd, char *daAggiungere){
+    //void *ptr = (char)argvcmd[1][0];
+    //printf("%s\n", argvcmd[1]);
+    int c = countHowManyRows(argvcmd);
+    argvcmd[c] = malloc(strlen(daAggiungere)*sizeof(char));
+    printf("valore delle righe: %d", c);
+    printf("valore: %s\n", argvcmd[c-1]);
+    strcpy(argvcmd[c], daAggiungere);
+    
+}
 int main (int argc, char **argv){
     if (argc < 2) {
         fprintf(stderr, "Fornire il nome del file\n");
@@ -61,12 +92,39 @@ int main (int argc, char **argv){
     strcpy(cmd, argv[2]);
 
     //devo salvare di nuovo il comando + i suoi argomenti
-    char **argvcmd = argv + 2;
+    char **temp = argv + 2;
+
+    // DEVO SALVARE TUTTO ARGV
+    // DA QUALCHE PARTE PERCHE
+    // PER AGGIUNGERE UN ELEMENTO
+    // SONO OBBLIGATO A POTER ACCEDERE
+    // AL PUNTATORE
+
+    viewArrayOfPointers(temp);
+    //+2 perche' aggiungo un elemento e uno deve essere il null
+    char **argvcmd = malloc((countHowManyRows(temp)+2)*sizeof(char*));
+    //per ogni elemento riga di argvcmd
+    char **b = argvcmd;
+    printf("-----\n");
+    for (char **a = temp; *a; ++a){
+        *b = malloc((strlen(*a)*sizeof(char)));
+        strcpy(*b, *a);
+        ++b;
+    }
+    *b = malloc((strlen("ciao")*sizeof(char)));
+    strcpy(*b, "ciao");
+    ++b;
+    *b = NULL;
+    
     viewArrayOfPointers(argvcmd);
+    printf("-----\n");
+
     //checkIfThereAreAny@
     if (checkIfThereAreAnyAt(argvcmd)){
-        modifyArgvcmd(argvcmd, " ciao");
+        modifyArgvcmd(argvcmd, "ciao");
         //printf("YES \n");
+    } else {
+        addArgvcmd(argvcmd, "ciao");
     }
     printf("Dopo aver modificato:\n");
     viewArrayOfPointers(argvcmd);
