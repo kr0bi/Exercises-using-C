@@ -63,7 +63,9 @@ int countHowManyRows (char **ptr){
 void modifyArgvcmd(char **argvcmd, char *daConcatenare){
     //void *ptr = (char)argvcmd[1][0];
     //printf("%s\n", argvcmd[1]);
+    //realloc(argvcmd[positionAt(argvcmd)], (strlen(daConcatenare)+1)*sizeof(char));
     strcpy(argvcmd[positionAt(argvcmd)], daConcatenare);
+    //argvcmd[positionAt(argvcmd)] = NULL; 
     
 }
 //caso in cui devo aggiungere una riga alla matrice
@@ -81,7 +83,7 @@ void addArgvcmd(char **argvcmd, char *daAggiungere){
 
 void copyMatrix (char **destinazione, char **sorgente){
     char **b = destinazione;
-    printf("-----\n");
+    //printf("-----\n");
     for (char **a = sorgente; *a; ++a){
         *b = malloc((strlen(*a)*sizeof(char)));
         strcpy(*b, *a);
@@ -106,6 +108,16 @@ void addAWord (char **destinazione, char *source){
     ++b;
     *b=NULL;
 }
+
+void copy (char *destination, char *source){
+    //destination = malloc(strlen(source)*sizeof(char));
+    strcpy(destination, source);
+    destination[(strlen(source)-1)]=0;
+    //printf("%c", source[strlen(source)-1]);
+
+}
+
+
 int main (int argc, char **argv){
     if (argc < 2) {
         fprintf(stderr, "Fornire il nome del file\n");
@@ -119,6 +131,7 @@ int main (int argc, char **argv){
     strcpy(nomeFile, argv[1]);
     char *cmd = malloc((strlen(argv[2])+1)*sizeof(char));
     strcpy(cmd, argv[2]);
+    //printf("cmd: %s\n", cmd);
 
     //devo salvare di nuovo il comando + i suoi argomenti
     char **temp = argv + 2;
@@ -129,11 +142,13 @@ int main (int argc, char **argv){
     // SONO OBBLIGATO A POTER ACCEDERE
     // AL PUNTATORE
 
-    viewArrayOfPointers(temp);
+    //viewArrayOfPointers(temp);
     //+2 perche' aggiungo un elemento e uno deve essere il null
     char **argvcmd = malloc((countHowManyRows(temp)+2)*sizeof(char*));
     copyMatrix(argvcmd, temp);
-    addAWord(argv, "ciao");
+    //addAWord(argv, "ciao");
+
+
     //per ogni elemento riga di argvcmd
     // char **b = argvcmd;
     // printf("-----\n");
@@ -147,19 +162,19 @@ int main (int argc, char **argv){
     // ++b;
     // *b = NULL;
     
-    viewArrayOfPointers(argvcmd);
-    printf("-----\n");
+    //viewArrayOfPointers(argvcmd);
+    //printf("-----\n");
 
     //checkIfThereAreAny@
-    if (checkIfThereAreAnyAt(argvcmd)){
-        modifyArgvcmd(argvcmd, "ciao");
-        //printf("YES \n");
-    } else {
-        addArgvcmd(argvcmd, "ciao");
-    }
-    printf("-----\n");
-    printf("Dopo aver modificato:\n");
-    viewArrayOfPointers(argvcmd);
+    // if (checkIfThereAreAnyAt(argvcmd)){
+    //     modifyArgvcmd(argvcmd, "ciao");
+    //     //printf("YES \n");
+    // } else {
+    //     addArgvcmd(argvcmd, "ciao");
+    // }
+    // printf("-----\n");
+    // printf("Dopo aver modificato:\n");
+    // viewArrayOfPointers(argvcmd);
 
     //devo leggere il file riga per riga
     //apro il file
@@ -169,20 +184,58 @@ int main (int argc, char **argv){
         return 2;
     }
 
-    fprintf(stdout, "-------\n");
+    //fprintf(stdout, "-------\n");
     //meglio usare fgetc e copiare char per char
     //fin quando non si arriva a '\n' 
     char *testo = malloc(2*sizeof(char));
     //char **contenutoRighe = malloc(2*sizeof(char));
     //int numeroRighe = 0; //+1 logicamente
     FILE *fileInterno;
+
+    //devo salvare il current argvcmd
+    char **current_argvcmd = malloc((countHowManyRows(argvcmd)+2)*sizeof(char*));
+    copyMatrix(current_argvcmd, argvcmd);
+    char *real_testo;
     for (int i = 0; !feof(file); ++i){
         testo[i] = fgetc(file);
         testo = (char *)realloc(testo, (i+1+1)*sizeof(char));
         if (testo[i]=='\n'){
-            //strcpy(contenutoRighe[numeroRighe], testo);
-            fprintf(stdout, "stringa corrente: %s\n", testo);
             
+            //printf("testo: %s\n", testo);
+            //strcpy(contenutoRighe[numeroRighe], testo);
+            //fprintf(stdout, "stringa corrente: %s\n", testo);
+            //checkIfThereAreAny@
+
+            //devo copiare il testo fino a prima
+            //dell'invio
+            real_testo = malloc(strlen(testo)*sizeof(char));
+            copy(real_testo, testo);            
+            
+            if (checkIfThereAreAnyAt(argvcmd)){
+                modifyArgvcmd(argvcmd, real_testo);
+                
+                //printf("YES \n");
+            } else {
+                //modifyArgvcmd(argvcmd, testo);
+                //addArgvcmd(argvcmd, testo);
+            }
+            pid_t pid = fork();
+            switch (pid){
+                case -1:
+                    perror("fork() failed");
+                    return -1;
+                case 0:
+                    //printf("cmd: %s\n", cmd);
+                    //viewArrayOfPointers(argvcmd);
+                    execvp(cmd, argvcmd);
+                    perror("exec failed");
+                    return 1;
+                default:
+                    wait(NULL);
+            }
+            //viewArrayOfPointers(argvcmd);
+            copyMatrix(argvcmd, current_argvcmd);
+            //printf("-----\n");
             
             i=-1;
         }
