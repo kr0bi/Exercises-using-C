@@ -75,7 +75,36 @@ void addArgvcmd(char **argvcmd, char *daAggiungere){
     printf("valore delle righe: %d", c);
     printf("valore: %s\n", argvcmd[c-1]);
     strcpy(argvcmd[c], daAggiungere);
+    argvcmd[c+1] = NULL; 
     
+}
+
+void copyMatrix (char **destinazione, char **sorgente){
+    char **b = destinazione;
+    printf("-----\n");
+    for (char **a = sorgente; *a; ++a){
+        *b = malloc((strlen(*a)*sizeof(char)));
+        strcpy(*b, *a);
+        ++b;
+    }
+    //punto all'ultimo elemento
+    //gli alloco lo spazio per inserire la parola ciao
+    *b = NULL;
+    // *b = malloc((strlen("ciao")+1)*sizeof(char));
+    // strcpy(*b, "ciao");
+    // ++b;
+    // *b = NULL;
+}
+
+void addAWord (char **destinazione, char *source){
+    char **b = destinazione;
+    while (*b){
+        ++b;
+    }
+    *b = malloc((strlen(source)+1)*sizeof(char));
+    strcpy(*b, source);
+    ++b;
+    *b=NULL;
 }
 int main (int argc, char **argv){
     if (argc < 2) {
@@ -103,18 +132,20 @@ int main (int argc, char **argv){
     viewArrayOfPointers(temp);
     //+2 perche' aggiungo un elemento e uno deve essere il null
     char **argvcmd = malloc((countHowManyRows(temp)+2)*sizeof(char*));
+    copyMatrix(argvcmd, temp);
+    addAWord(argv, "ciao");
     //per ogni elemento riga di argvcmd
-    char **b = argvcmd;
-    printf("-----\n");
-    for (char **a = temp; *a; ++a){
-        *b = malloc((strlen(*a)*sizeof(char)));
-        strcpy(*b, *a);
-        ++b;
-    }
-    *b = malloc((strlen("ciao")*sizeof(char)));
-    strcpy(*b, "ciao");
-    ++b;
-    *b = NULL;
+    // char **b = argvcmd;
+    // printf("-----\n");
+    // for (char **a = temp; *a; ++a){
+    //     *b = malloc((strlen(*a)*sizeof(char)));
+    //     strcpy(*b, *a);
+    //     ++b;
+    // }
+    // *b = malloc((strlen("ciao")*sizeof(char)));
+    // strcpy(*b, "ciao");
+    // ++b;
+    // *b = NULL;
     
     viewArrayOfPointers(argvcmd);
     printf("-----\n");
@@ -126,6 +157,7 @@ int main (int argc, char **argv){
     } else {
         addArgvcmd(argvcmd, "ciao");
     }
+    printf("-----\n");
     printf("Dopo aver modificato:\n");
     viewArrayOfPointers(argvcmd);
 
@@ -150,6 +182,7 @@ int main (int argc, char **argv){
         if (testo[i]=='\n'){
             //strcpy(contenutoRighe[numeroRighe], testo);
             fprintf(stdout, "stringa corrente: %s\n", testo);
+            
             
             i=-1;
         }
